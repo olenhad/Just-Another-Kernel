@@ -75,7 +75,7 @@ void OSSwapTask()
 		pxCurrentTCB = taskTable[currentTask].stack_ptr;
 		MOVSP();
 		portRESTORE_CONTEXT();
-		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
+		//taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 		
 	}
 	
