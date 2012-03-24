@@ -51,6 +51,7 @@ int findNextTask()
 	// these 4 tasks.
 	currentTask = (currentTask+1)%numTasks;
 }
+
 void OSSwapTask()
  {
 	 // Save the context of the current task, and copy the task stack pointer to the task's entry in the Task Control Block (tcb).
@@ -60,12 +61,14 @@ void OSSwapTask()
 	// Important: If you are starting up a task for the first time, you must set pxCurrentTCB
 	// to be equal to the address of the stack allocated to the task in OSAddTask, then
 	// call MOVSP to correctly set up SP_L and SP_H.
-	say1("kernel::OSSwapTask:Entering Swap Task, value of currentTask is %d", currentTask);
+	//say1("kernel::OSSwapTask:Entering Swap Task, value of currentTask is %d\r\n", currentTask);
 	portSAVE_CONTEXT();
+	taskTable[currentTask].stack_ptr=pxCurrentTCB;
 	currentTask = findNextTask();
-	say1("kernel::OSSwapTask:New currentTask is %d", currentTask);
+	//say1("kernel::OSSwapTask:New currentTask is %d\r\n", currentTask);
 	if (!taskTable[currentTask].runCount) {
 		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
+		
 		
 	}
 	else{

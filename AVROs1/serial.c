@@ -132,10 +132,10 @@ void say(char *str)
 
 void say1(char *str, int a) {
 	//TODO::potential for buffer overflow
-	strcat(str,"\r\n");
+	//strcat(str,"\r\n");
 	sprintf(buf, str, a);
 	say(buf);
-	
+	return;
 }
 
 
@@ -143,6 +143,6 @@ void say2(char *str, int a, int b) {
 	//TODO::potential for buffer overflow
 	strcat(str,"\r\n");
 	sprintf(buf, str, a, b);
-	
+	return;
 	say(buf);
 }

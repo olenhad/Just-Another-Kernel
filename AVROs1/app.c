@@ -15,15 +15,17 @@
 
 // Base frequency for the buzzer
 #define BASE_FREQ	200
-
+int count1 =0;
+int count2 =0;
 void task1(void *p)
 {
 	// Operates the buzzer
 	// The base frequency is passed in through p.
 	int base=(int) p;
-	
+	count1++;
 	while(1)
 	{
+		count2++;
 
 		// Implement Task 1 logic below
 		
@@ -31,6 +33,8 @@ void task1(void *p)
 		
 		// Hand over control to the OS.
 		say("task 1 running ...\r\n");
+		say1("%d\r\n",count1);
+		say1("%d\r\n",count2);
 		OSSwapTask();
 	}		
 }
@@ -93,7 +97,7 @@ int task1Stack[32], task2Stack[32], task3Stack[32];
 int main()
 {
 	setup();
-	
+	say("hi fuckers\r\n");
 	OSInit();
 
 	// Create the tasks. Task1 is for the buzzer and we pass in the base frequency as an argument.
