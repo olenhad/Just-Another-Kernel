@@ -20,6 +20,8 @@ void setupSerial();
 
 // Say a string to the terminal on the PC/notebook from Arduino
 void say(char *str);
+void say1(char *str, int a);
+void say2(char *str, int a, int b);
 
 // Hear something sent from the PC/notebook to the Arduino. len=0 if nothing was sent, otherwise contains # of characters received.
 void hear(char *str, int *len);

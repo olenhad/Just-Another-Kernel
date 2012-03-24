@@ -30,8 +30,7 @@ void task1(void *p)
 		// Implement Task 1 logic above
 		
 		// Hand over control to the OS.
-		say("task 1 running ...\n");
-		_delay_ms(500);
+		say("task 1 running ...\r\n");
 		OSSwapTask();
 	}		
 }
@@ -45,8 +44,7 @@ void task2(void *p)
 		// Implement Task 2 logic above
 		
 		// Hand over control to the OS.
-		say("task 2 running ...\n");
-		_delay_ms(500);
+		say("task 2 running ...\r\n");
 		OSSwapTask();
 	}		
 }
@@ -60,8 +58,7 @@ void task3(void *p)
 		// Implement Task 3 logic above
 		
 		// Hand over control to the OS.
-		say("task 3 running ...\n");
-		_delay_ms(500);
+		say("task 3 running ...\r\n");
 		OSSwapTask();
 	}		
 }

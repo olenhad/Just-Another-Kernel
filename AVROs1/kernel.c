@@ -10,11 +10,12 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "kernel.h"
+#include "contextMacros.h"
 
 int currentTask = -1;
 unsigned long pxCurrentTCB;
 unsigned numTasks=0;
-// Task Control Block
+
 typedef struct ttcb
 {
 	int runCount;
@@ -28,7 +29,7 @@ typedef struct ttcb
 } TTaskBlock;
 
 // Task Control Block (TCB), which contains information on all the tasks.
-TTaskBlock taskTable[OS_NUM_TASKS];
+TTaskBlock* taskTable;
 void OSMakeAtomic()
 {
 	// Disables interrupts to create an atomic section.
@@ -59,7 +60,10 @@ void OSSwapTask()
 	// Important: If you are starting up a task for the first time, you must set pxCurrentTCB
 	// to be equal to the address of the stack allocated to the task in OSAddTask, then
 	// call MOVSP to correctly set up SP_L and SP_H.
+	say1("kernel::OSSwapTask:Entering Swap Task, value of currentTask is %d", currentTask);
 	portSAVE_CONTEXT();
+	currentTask = findNextTask();
+	say1("kernel::OSSwapTask:New currentTask is %d", currentTask);
 	if (!taskTable[currentTask].runCount) {
 		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 		
@@ -105,7 +109,7 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 	// number of tasks that can be created, not the actual number.
 	
 	TTaskBlock tempTask;
-	tempTask.fptr()= taskptr;
+	tempTask.fptr = taskptr;
 	tempTask.arg = arg;
 	tempTask.prio = prio;
 	tempTask.stack_ptr = stack;
@@ -119,6 +123,7 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 
 void OSRun()
 {
+	currentTask = 0;
 	taskTable[0].runCount++;
 	taskTable[0].fptr((void*)taskTable[0].arg);
 }

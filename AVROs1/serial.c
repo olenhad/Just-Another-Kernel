@@ -4,11 +4,16 @@
  * Created: 10/6/2011 10:33:22 AM
  *  Author: dcstanc
  */ 
+#define F_CPU 16000000
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include <string.h>
 #include "serial.h"
+#include <string.h>
+
+char buf[100];
 
 // Say queue
 char q[QLEN];
@@ -45,6 +50,7 @@ void setupSerial()
 	UCSR0A=0;
 	leave_atomic();
 }
+
 
 // ISR for transmit end.
 ISR(USART_TX_vect)
@@ -121,5 +127,22 @@ void say(char *str)
 		}
 	}
 	leave_atomic();
+	_delay_ms(500);
 }
 
+void say1(char *str, int a) {
+	//TODO::potential for buffer overflow
+	strcat(str,"\r\n");
+	sprintf(buf, str, a);
+	say(buf);
+	
+}
+
+
+void say2(char *str, int a, int b) {
+	//TODO::potential for buffer overflow
+	strcat(str,"\r\n");
+	sprintf(buf, str, a, b);
+	
+	say(buf);
+}
