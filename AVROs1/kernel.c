@@ -29,7 +29,6 @@ typedef struct ttcb
 
 // Task Control Block (TCB), which contains information on all the tasks.
 TTaskBlock taskTable[OS_NUM_TASKS];
-
 void OSMakeAtomic()
 {
 	// Disables interrupts to create an atomic section.
@@ -49,6 +48,7 @@ int findNextTask()
 	// Note that OS_NUM_TASKS in kernel.h is the MAXIMUM number of tasks that can be created, not the actual number
 	// created. So OS_NUM_TASKS can be 10 although in actual fact only 4 tasks were created. You should pick only amongst
 	// these 4 tasks.
+	currentTask = (currentTask+1)%numTasks;
 }
 void OSSwapTask()
  {
@@ -59,8 +59,19 @@ void OSSwapTask()
 	// Important: If you are starting up a task for the first time, you must set pxCurrentTCB
 	// to be equal to the address of the stack allocated to the task in OSAddTask, then
 	// call MOVSP to correctly set up SP_L and SP_H.
+	portSAVE_CONTEXT();
+	if (!taskTable[currentTask].runCount) {
+		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
+		
+	}
+	else{
+		pxCurrentTCB = taskTable[currentTask].stack_ptr;
+		MOVSP();
+		portRESTORE_CONTEXT();
+		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
+		
+	}
 	
-
 // Do not modify the line below!	
 	asm("ret");
 }

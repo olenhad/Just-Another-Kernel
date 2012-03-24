@@ -61,7 +61,22 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AVROs1.c">
+    <Compile Include="app.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="contextMacros.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="kernel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="kernel.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
