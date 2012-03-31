@@ -53,7 +53,7 @@ void task1(void* p) {
 		PORTB &= SPEAKER_LOW;
 		_delay_ms((DELAY*1.0/2.0)*1000);
 		count2++;
-		OSSwapTask();
+		// OSSwapTask();
 
 
 	}
@@ -116,7 +116,7 @@ void task2(void* p) {
 		//restart ADC conversion
 		ADCSRA |= 0x40;
 		releaseADC();
-		OSSwapTask();
+		// OSSwapTask();
 	}
 }
 
@@ -161,7 +161,7 @@ void task3(void *p)
 		//restart ADC conversion
 		ADCSRA |= 0x40;
 		releaseADC();
-		OSSwapTask();
+		// OSSwapTask();
 	}		
 }
 void ledUP()
@@ -193,7 +193,7 @@ void task4()
 		count2++;
 		ledUP();
 		_delay_ms((DELAY*1.0/2.0)*1000);
-		OSSwapTask();
+		// OSSwapTask();
 
 	}
 

@@ -174,9 +174,9 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 }
 void OSRun()
 {
-	//setupSchedulerTimer();
+	setupSchedulerTimer();
 	currentTask = 0;
 	taskTable[0].runCount++;
-	//startSchedulerTimer();
+	startSchedulerTimer();
 	taskTable[0].fptr((void*)taskTable[0].arg);
 }
