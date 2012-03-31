@@ -11,10 +11,36 @@
 #include <avr/interrupt.h>
 #include "kernel.h"
 #include "contextMacros.h"
+
 int timerCount = 0;
 int currentTask = -1;
 unsigned long pxCurrentTCB;
 unsigned numTasks=0;
+int adcUser = -1;
+int adcInUse = 0;
+
+int requestADC() {
+	OSMakeAtomic();
+	int returnVal = 0;
+	if (!adcInUse)
+	{
+		adcInUse = 1;
+		adcUser = currentTask;
+		returnVal = 1;
+	}
+	else if (adcUser == currentTask)
+		returnVal = 1;
+	else returnVal = 0;	
+	OSLeaveAtomic();
+	return returnVal;	
+}
+
+void releaseADC() {
+	OSMakeAtomic();
+	adcInUse = 0;
+	adcUser = -1;
+	OSLeaveAtomic();
+}
 
 typedef struct ttcb
 {
@@ -33,6 +59,7 @@ TTaskBlock* taskTable;
 void OSMakeAtomic()
 {
 	// Disables interrupts to create an atomic section.
+	cli();
 }
 void setupSchedulerTimer()
 {
@@ -49,6 +76,7 @@ void startSchedulerTimer()
 }
 void OSLeaveAtomic()
 {
+	sei();
 	// Leaves atomic section by re-enabling interrupts.
 }
 
@@ -79,6 +107,7 @@ void OSSwapTask()
 	currentTask = findNextTask();
 	//say1("kernel::OSSwapTask:New currentTask is %d\r\n", currentTask);
 	if (!taskTable[currentTask].runCount) {
+	 taskTable[currentTask].runCount++;
 		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 		
 		
@@ -90,7 +119,6 @@ void OSSwapTask()
 		//taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 		
 	}
-	// taskTable[currentTask].runCount++;
 	
 // Do not modify the line below!	
 	asm("ret");
