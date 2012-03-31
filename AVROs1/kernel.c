@@ -106,25 +106,20 @@ void OSSwapTask()
 
 	// pxCurrentTCB = taskTable[currentTask].base_ptr;
 	// MOVSP();
-	say("starting swap task\r\n");
 	portSAVE_CONTEXT();
 	taskTable[currentTask].stack_ptr=pxCurrentTCB;
 	currentTask = findNextTask();
-	say("saved context\r\n");
 	if (!taskTable[currentTask].runCount) {
 		pxCurrentTCB = taskTable[currentTask].base_ptr;
 		MOVSP();
 		taskTable[currentTask].runCount++;
-		say("starting new function\r\n");
 		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 	}
 	else{
-		say("restoring context\r\n");
 		pxCurrentTCB = taskTable[currentTask].stack_ptr;
 		portRESTORE_CONTEXT();
 		// STRSP();
 		// taskTable[currentTask].stack_ptr=pxCurrentTCB;
-		// say("hallo");
 	}
 	
 // Do not modify the line below!	

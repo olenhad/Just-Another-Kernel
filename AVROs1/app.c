@@ -53,7 +53,6 @@ void task1(void* p) {
 		PORTB &= SPEAKER_LOW;
 		_delay_ms((DELAY*1.0/2.0)*1000);
 		count2++;
-		say1("t1 going to swap tasks%d\n",count1);
 		OSSwapTask();
 
 
@@ -89,7 +88,7 @@ int ledRemap(int adcinput) {
 	{
 		temp=0;
 	}
-	double frequency=1+10*temp/255.0;
+	double frequency=1+20*temp/255.0;
 	return (int)frequency;
 }
 
@@ -99,8 +98,6 @@ void task2(void* p) {
 	unsigned l, h;
 	count1++;
 	while (1) {
-		//	say1("%d\n",count1);
-		//	say1("%d\n",count2++);
 		while (!requestADC());
 		t2init();
 		ADCSRA |= 0x40;//0b0100 0000
@@ -186,18 +183,16 @@ void task4()
 	// sei();
 	int count1=0,count2=0;
 	count1++;
-	say1("%d\n",count1);
 	while (1) {
 		//FREQ = ledFreq;
 		//DELAY = 1.0/(1.0*FREQ);
 
 		ledDown();
-		_delay_ms(500);
+		_delay_ms((DELAY*1.0/2.0)*1000);
 		//
 		count2++;
-		//	say1("%d\n",count2);
 		ledUP();
-		_delay_ms(500);
+		_delay_ms((DELAY*1.0/2.0)*1000);
 		OSSwapTask();
 
 	}
