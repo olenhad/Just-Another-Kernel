@@ -72,8 +72,7 @@
     <GenerateMapFile>True</GenerateMapFile>
     <GenerateListFile>True</GenerateListFile>
     <GenerateEepFile>True</GenerateEepFile>
-    <PostBuildEvent>avrdude -p m328p -b 115200 -c stk500v1 -P\\.\\COM15 -U flash:w:AVROs1.hex
-</PostBuildEvent>
+    <PostBuildEvent>avrdude -p m328p -b 115200 -c stk500v1 -P\\.\\COM15 -U flash:w:AVROs1.hex</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.c">
