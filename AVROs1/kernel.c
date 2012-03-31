@@ -25,7 +25,8 @@ typedef struct ttcb
 	int prio; // Task Priority.
 	void (*fptr)(void *); // Pointer to the task
 	void *arg; // Argument to fptr
-	long stack_ptr; // Stack pointer
+	unsigned long stack_ptr; // Stack pointer
+	unsigned long base_ptr;
 } TTaskBlock;
 
 // Task Control Block (TCB), which contains information on all the tasks.
@@ -61,22 +62,27 @@ void OSSwapTask()
 	// Important: If you are starting up a task for the first time, you must set pxCurrentTCB
 	// to be equal to the address of the stack allocated to the task in OSAddTask, then
 	// call MOVSP to correctly set up SP_L and SP_H.
-	//say1("kernel::OSSwapTask:Entering Swap Task, value of currentTask is %d\r\n", currentTask);
+
+
+	// pxCurrentTCB = taskTable[currentTask].base_ptr;
+	// MOVSP();
+
 	portSAVE_CONTEXT();
 	taskTable[currentTask].stack_ptr=pxCurrentTCB;
 	currentTask = findNextTask();
-	//say1("kernel::OSSwapTask:New currentTask is %d\r\n", currentTask);
+
 	if (!taskTable[currentTask].runCount) {
+		pxCurrentTCB = taskTable[currentTask].base_ptr;
+		MOVSP();
+		taskTable[currentTask].runCount++;
 		taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
-		
-		
 	}
 	else{
 		pxCurrentTCB = taskTable[currentTask].stack_ptr;
-		MOVSP();
 		portRESTORE_CONTEXT();
-		//taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
-		
+		// STRSP();
+		// taskTable[currentTask].stack_ptr=pxCurrentTCB;
+		// say("hallo");
 	}
 	
 // Do not modify the line below!	
@@ -116,6 +122,7 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 	tempTask.arg = arg;
 	tempTask.prio = prio;
 	tempTask.stack_ptr = stack;
+	tempTask.base_ptr = stack;
 	tempTask.runCount=0;
 	taskTable[numTasks] = tempTask;
 	
@@ -123,10 +130,13 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 
 	return 0;
 }
-
+//void OSRun() __attribute__ ((naked));
 void OSRun()
 {
 	currentTask = 0;
 	taskTable[0].runCount++;
+	//pxCurrentTCB = taskTable[currentTask].base_ptr;
+	//MOVSP();
 	taskTable[0].fptr((void*)taskTable[0].arg);
+	//asm("ret");
 }

@@ -105,4 +105,18 @@ asm volatile ("cli \n\t"\
 				"sei");
 
 
+
+
+
+//r26, 27, ...
+// r26 = sp_l
+// r27 = sp_h
+#define STRSP()\
+asm volatile ("cli \n\t"\
+				"in r26, __SP_L__	\n\t"\
+				"in r27, __SP_H__	\n\t"\
+				"sts pxCurrentTCB+1, r27	\n\t"\
+				"sts pxCurrentTCB, r26	\n\t"\
+				"sei");
+
 #endif /* CONTEXTMACROS_H_ */
