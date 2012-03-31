@@ -128,6 +128,7 @@ void say(char *str)
 	}
 	leave_atomic();
 	_delay_ms(500);
+	
 }
 
 void say1(char *str, int a) {

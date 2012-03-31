@@ -35,7 +35,7 @@ void task1(void *p)
 		say("task 1 running ...\r\n");
 		say1("%d\r\n",count1);
 		say1("%d\r\n",count2);
-		OSSwapTask();
+	//	OSSwapTask();
 	}		
 }
 
@@ -49,7 +49,7 @@ void task2(void *p)
 		
 		// Hand over control to the OS.
 		say("task 2 running ...\r\n");
-		OSSwapTask();
+		//OSSwapTask();
 	}		
 }
 
@@ -63,7 +63,7 @@ void task3(void *p)
 		
 		// Hand over control to the OS.
 		say("task 3 running ...\r\n");
-		OSSwapTask();
+		//OSSwapTask();
 	}		
 }
 
@@ -76,7 +76,7 @@ void task4(void *ptr)
 		// Implement Task 4 logic above
 		
 		// Hand over control to the OS.
-		OSSwapTask();
+		//OSSwapTask();
 	}		
 	
 }

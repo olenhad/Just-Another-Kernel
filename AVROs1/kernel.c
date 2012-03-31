@@ -11,7 +11,7 @@
 #include <avr/interrupt.h>
 #include "kernel.h"
 #include "contextMacros.h"
-
+int timerCount = 0;
 int currentTask = -1;
 unsigned long pxCurrentTCB;
 unsigned numTasks=0;
@@ -34,7 +34,19 @@ void OSMakeAtomic()
 {
 	// Disables interrupts to create an atomic section.
 }
-
+void setupSchedulerTimer()
+{
+	TCNT0=0;//initial value
+	OCR0A=156; //count value
+	TCCR0A = 0b01000010;//WGM set to CTC mode. COMOA set to toggle
+	TIMSK0 |= 0b10;
+	
+}
+void startSchedulerTimer()
+{
+	TCCR0B= 0b00000101;//prescalar set to 1024
+	sei();
+}
 void OSLeaveAtomic()
 {
 	// Leaves atomic section by re-enabling interrupts.
@@ -78,6 +90,7 @@ void OSSwapTask()
 		//taskTable[currentTask].fptr((void *)taskTable[currentTask].arg);
 		
 	}
+	// taskTable[currentTask].runCount++;
 	
 // Do not modify the line below!	
 	asm("ret");
@@ -86,7 +99,12 @@ void OSSwapTask()
 // ISR for the timer. IMPLEMENT ONLY IN PART 2!
 ISR(TIMER0_COMPA_vect, ISR_NAKED)
 {
-	
+	timerCount++;
+	if(timerCount>=50)
+	{
+		OSSwapTask();
+		timerCount=0;
+	}		
 	// Do not change this!
 	asm("reti");
 }
@@ -126,7 +144,9 @@ int OSAddTask(void (*taskptr)(void *), int prio, int *stack, void* arg)
 
 void OSRun()
 {
+	setupSchedulerTimer();
 	currentTask = 0;
 	taskTable[0].runCount++;
+	startSchedulerTimer();
 	taskTable[0].fptr((void*)taskTable[0].arg);
 }
