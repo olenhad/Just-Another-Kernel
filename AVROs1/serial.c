@@ -127,7 +127,7 @@ void say(char *str)
 		}
 	}
 	leave_atomic();
-	_delay_ms(500);
+	_delay_ms(150);
 	
 }
 
@@ -140,10 +140,9 @@ void say1(char *str, int a) {
 }
 
 
-void say2(char *str, int a, int b) {
+void sayDouble(char *str, double a) {
 	//TODO::potential for buffer overflow
-	strcat(str,"\r\n");
-	sprintf(buf, str, a, b);
-	return;
+	sprintf(buf, str, a);
 	say(buf);
+	return;
 }
