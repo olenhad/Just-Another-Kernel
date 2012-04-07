@@ -112,7 +112,8 @@ void task2(void* p) {
 		l = ADCL;
 		h = ADCH;
 		tmp = h*256 + l;
-		ledFreq = ledRemap(tmp);
+		//ledFreq = ledRemap(tmp);
+		ledFreq= 0.1+10*(float)tmp/1023.0;
 		//restart ADC conversion
 		ADCSRA |= 0x40;
 		releaseADC();
