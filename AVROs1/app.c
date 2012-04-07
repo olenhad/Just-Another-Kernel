@@ -52,7 +52,7 @@ void task1(void* p) {
 		//
 		PORTB &= SPEAKER_LOW;
 		_delay_ms((DELAY*1.0/2.0)*1000);
-		count2++;
+		
 		OSSwapTask();
 
 
@@ -76,7 +76,7 @@ int t2init() {
 	ADMUX = 0x41;//0100 0001
 }
 
-unsigned ledFreq;
+unsigned ledFreq=1;
 
 int ledRemap(int adcinput) {
 	double temp = 1.0*(adcinput - 620 )/(1.0*(LDR_RANGE))*255.0;
@@ -112,7 +112,9 @@ void task2(void* p) {
 		l = ADCL;
 		h = ADCH;
 		tmp = h*256 + l;
-		ledFreq = ledRemap(tmp);
+		//say1("%d\r\n",tmp);
+		//ledFreq = ledRemap(tmp)
+		ledFreq = 0.1+10*(float)tmp*1.0/1023.0;		
 		//restart ADC conversion
 		ADCSRA |= 0x40;
 		releaseADC();
@@ -157,6 +159,7 @@ void task3(void *p)
 		l = ADCL;
 		h = ADCH;
 		tmp = h*256 + l;
+		//say1("%d\r\n",tmp);
 		buzzerFreq = remapBuzzerFreq(tmp);
 		//restart ADC conversion
 		ADCSRA |= 0x40;
@@ -184,15 +187,16 @@ void task4()
 	int count1=0,count2=0;
 	count1++;
 	while (1) {
-		//FREQ = ledFreq;
-		//DELAY = 1.0/(1.0*FREQ);
-
+		FREQ = ledFreq;
+		DELAY = 1.0/(1.0*FREQ);
+		
 		ledDown();
 		_delay_ms((DELAY*1.0/2.0)*1000);
 		//
 		count2++;
 		ledUP();
 		_delay_ms((DELAY*1.0/2.0)*1000);
+	//	say1("%d\r\n",DELAY);
 		OSSwapTask();
 
 	}
