@@ -130,7 +130,7 @@ void OSSwapTask()
 ISR(TIMER0_COMPA_vect, ISR_NAKED)
 {
 	timerCount++;
-	if(timerCount>=50)
+	if(timerCount>=5)
 	{
 		OSSwapTask();
 		timerCount=0;
